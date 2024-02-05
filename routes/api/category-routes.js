@@ -8,8 +8,12 @@ router.get('/', async (req, res) => {
   try {
     const categoryData = await Category.findAll({
     // include its associated Products
-      include: [{ model: Product }],
+      include: [{ model: Product }]
     });
+    if (categoryData == null) {
+      res.status(404).json({ message: 'No categories found.' });
+      return;
+    }
     res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
@@ -24,17 +28,21 @@ router.get('/:id', async (req, res) => {
     // include its associated Products
       include: [{ model: Product }]
     });
+
+    if (categoryData == null) {
+      res.status(404).json({ message: 'No category with this id!' });
+      return;
+    }
     res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-
 router.post('/', async (req, res) => {
   // create a new category
   try {
-    const categoryData = await Category.create(req.body,{
+    const categoryData = await Category.create(req.body, {
     // include its associated Products
       include: [{ model: Product }]
     });
